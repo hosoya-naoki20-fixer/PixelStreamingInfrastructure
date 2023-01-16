@@ -8,6 +8,25 @@ let mediasoupRouter;
 let streamer = null;
 let peers = new Map();
 
+async function startMediasoup() {
+  let worker = await mediasoup.createWorker({
+    logLevel: config.mediasoup.worker.logLevel,
+    logTags: config.mediasoup.worker.logTags,
+    rtcMinPort: config.mediasoup.worker.rtcMinPort,
+    rtcMaxPort: config.mediasoup.worker.rtcMaxPort,
+  });
+
+  worker.on('died', () => {
+    console.error('mediasoup worker died (this should never happen)');
+    process.exit(1);
+  });
+
+  const mediaCodecs = config.mediasoup.router.mediaCodecs;
+  const mediasoupRouter = await worker.createRouter({ mediaCodecs });
+
+  return mediasoupRouter;
+}
+
 function connectSignalling(server) {
   console.log("Connecting to Signalling Server at %s", server);
   signalServer = new WebSocket(server);
