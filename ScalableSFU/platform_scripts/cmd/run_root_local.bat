@@ -14,7 +14,7 @@ call setup.bat
 pushd ..\..
 
 @Rem Run node server and pass any argument along.
-platform_scripts\cmd\node\node.exe sfu_server %*
+platform_scripts\cmd\node\node.exe root_sfu_server %*
 
 @Rem Pop sfu_server directory.
 popd
